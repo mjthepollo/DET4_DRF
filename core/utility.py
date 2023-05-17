@@ -1,7 +1,9 @@
 import base64
 import datetime
+import time
 from io import BytesIO
 
+from core.print import print_colored
 from core.setup import BUCKET_NAME, logger, openai, polly, polly_voice, s3
 
 
@@ -59,10 +61,50 @@ def add_assistant_message_to_messages(messages, message):
     return messages
 
 
-def get_message_by_chatgpt(messages):
+def get_complete_message_by_chatgpt(messages):
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo", messages=messages)
     return completion.choices[0].message.content.strip()
+
+
+special_characters = [".", "\n", "?", "!", ":"]
+
+
+def has_special_characters(string):
+    for char in special_characters:
+        if char in string:
+            return True
+    return False
+
+
+def get_sentences_by_chatgpt(messages):
+    response_stream = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo", messages=messages, stream=True)
+
+    collected_chunks = []
+    collected_messages = []
+    messages_for_sentence = []
+    start_time = time.time()
+    for chunk in response_stream:
+        collected_chunks.append(chunk)
+        # print(chunk["choices"][0])
+        chunk_message = chunk["choices"][0]["delta"].get('content', '')
+        stop = chunk['choices'][0]['finish_reason'] == "stop"
+        collected_messages.append(chunk_message)
+        messages_for_sentence.append(chunk_message)
+        if stop:
+            break
+        if has_special_characters(chunk_message):
+            # print("SPECIAL_CHARACTERS: ", chunk_message)
+            sentence = ''.join(
+                [message for message in messages_for_sentence]).strip()
+            messages_for_sentence = []
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+            print_colored("Generate SENTENCE By CHATGPT elapsed: {:.2f} seconds".format(
+                elapsed_time), "blue")
+            start_time = end_time
+            yield sentence
 
 
 def get_audio_file_url_using_polly(message):
