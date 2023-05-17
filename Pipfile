@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+pytest-django = "*"
+django-eventstream = "*"
+channels = "==3.0.5"
+djangorestframework = "*"
+openai = "*"
+boto3 = "*"
+django-environ = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
