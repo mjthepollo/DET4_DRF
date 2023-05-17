@@ -14,9 +14,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import django_eventstream
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+
+from core import views
 
 urlpatterns = [
+    path("", views.home, name="home"),
+    path("sse/", views.sse, name="sse"),
+    path('events/', include(django_eventstream.urls), {
+        'channels': ['test']
+    }),
     path('admin/', admin.site.urls),
 ]

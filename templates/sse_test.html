@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<script src="{% static 'django_eventstream/eventsource.min.js' %}"></script>
+<script src="{% static 'django_eventstream/reconnecting-eventsource.js' %}"></script>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SSE_TEST</title>
+  </head>
+  <body>
+    <h1>SSE_TEST</h1>
+    <button id="sse_event_button">SSE_EVENT!</button>
+    <div id="output"></div>
+  </body>
+  <script type="text/javascript">
+    var logMessage = function (s) {
+        var outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = outputDiv.innerHTML + s + '<br />';
+      };
+
+    const sse_event_button = document.getElementById('sse_event_button');
+    sse_event_button.addEventListener('click', () => {
+        console.log('SSE START!!');
+        fetch("/sse/")
+    });
+    
+    var source = new ReconnectingEventSource('/events/');
+    source.addEventListener('message', function (e) {
+        console.log(e.data);
+        logMessage(e.data);
+    }, false);
+  </script>
+</html>
