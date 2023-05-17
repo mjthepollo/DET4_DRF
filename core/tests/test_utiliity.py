@@ -135,14 +135,16 @@ class CoreUtilityTest(TestCase):
             {"role": "user", "content": f"'{test_quote}'"}]
         sentences = []
         print("START PRINT SENTENCES")
+        sentence_number = 0
         for sentence in get_sentences_by_chatgpt(send_messages):
             sentences.append(sentence)
             print_colored(f"SENTENCE: {sentence}", 'green')
             assert (has_special_characters(sentence))
+            sentence_number += 1
         end_time = time.time()
         elapsed_time = end_time - start_time
-        print_colored("Generate Text By CHATGPT elapsed: {:.2f} seconds".format(
-            elapsed_time), "blue")
+        print_colored(
+            f"Generate {sentence_number} Sentences By CHATGPT elapsed: {elapsed_time:.2f} seconds", "blue")
         # assert received_message == test_quote
 
     def test_get_audio_file_url_using_polly(self):
