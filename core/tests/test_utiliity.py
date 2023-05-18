@@ -17,6 +17,8 @@ from core.utility import (add_assistant_message_to_messages,
                           get_sentences_by_chatgpt, has_special_characters,
                           save_audio, save_file_to_s3)
 
+print_colored(f"BUCKET_NAME: {BUCKET_NAME}", "red")
+
 TEST_INPUT_JSON_PATH = "core/tests/src/test_input.json"
 TEST_FILE_PATH = "core/tests/src/test.txt"
 
@@ -43,8 +45,13 @@ class CoreUtilityTest(TestCase):
             content = f.read()
         test_file = BytesIO(content)
         test_file.name = "test.txt"
+        try:
+            s3.delete_object(Bucket=BUCKET_NAME, Key=test_file.name)
+        except Exception as e:
+            print(e)
         save_file_to_s3(test_file, test_file.name)
         assert check_file_in_s3_bucket(BUCKET_NAME, test_file.name)
+
         s3.delete_object(Bucket=BUCKET_NAME, Key=test_file.name)
 
     def test_decode_audio(self):
