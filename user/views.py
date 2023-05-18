@@ -7,6 +7,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 # Create your views here.
+from user.models import User
+from user.serializer import UserSerializer
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -26,6 +28,8 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 class UserLoginAPI(APIView):
+    serializer_class = UserSerializer
+
     def post(self, request):
         username = request.data['username']
         password = request.data['password']
