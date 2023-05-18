@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-9@t^+i_)0(tj#d#a(k@(cvwzl6lslyv#*84oq8qeglcfo#_s22
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1:8000", 'det4.site']
 
 AUTH_USER_MODEL = 'user.User'
 
@@ -51,7 +51,6 @@ INSTALLED_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'channels',
-    'django_eventstream',
     'rest_framework_simplejwt',
 ]
 
@@ -76,6 +75,12 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
 }
 
 SIMPLE_JWT = {

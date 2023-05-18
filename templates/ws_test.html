@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WS TEST</title>
+  </head>
+  <body>
+    <h1>WS TEST</h1>
+    <input type="text" placeholder="TEXT PLZ!">
+    <button id="chat_button">CHAT!</button>
+    <div id="output"></div>
+  </body>
+  <script type="text/javascript">
+    const input = document.querySelector('input');
+    let websocket = new WebSocket("ws://127.0.0.1:8000/chat/test");
+
+    const logMessage = function (s) {
+        const outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = outputDiv.innerHTML + s + '<br />';
+    };
+
+    websocket.onmessage = function(e) {
+      const receiveData = JSON.parse(e.data);
+      logMessage(receiveData.message);
+    }
+  
+    websocket.onopen = function(e){
+      websocket.send(JSON.stringify({'message': 'MESSAGE START!'}));
+    }
+
+    const chat_button = document.getElementById('chat_button');
+    chat_button.addEventListener('click', function(){
+      websocket.send(JSON.stringify({'message': input.value}))
+    });
+  </script>
+</html>
