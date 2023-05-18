@@ -17,10 +17,8 @@ Including another URLconf
 import django_eventstream
 from django.contrib import admin
 from django.urls import include, path
-from rest_framework_simplejwt.views import TokenRefreshView
 
 from core import views
-from core.views import MyTokenObtainPairView
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -28,7 +26,6 @@ urlpatterns = [
     path('events/', include(django_eventstream.urls), {
         'channels': ['test']
     }),
-    path('token/',  MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('user/', include('user.urls')),
     path('admin/', admin.site.urls),
 ]
