@@ -55,6 +55,8 @@ THIRD_PARTY_APPS = [
 ]
 
 MODELS = [
+    "drawing",
+    "room",
     "user",
 ]
 

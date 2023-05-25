@@ -6,6 +6,7 @@ from user import views
 app_name = "user"
 
 urlpatterns = [
+    path('signup/', views.UserSignupAPI.as_view(), name='signup'),
     path('login/', views.UserLoginAPI.as_view(), name='login'),
     path('token/',  views.MyTokenObtainPairView.as_view(),
          name='token_obtain_pair'),
